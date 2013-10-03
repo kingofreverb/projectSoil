@@ -1,6 +1,7 @@
 package com.kingofreverb.core;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +28,13 @@ public class SoilServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().println("Hello World");
+		String nextPageFqcn = request.getParameter("nextPage");
+		ISoilPage page = new Dispatcher().dispatch(nextPageFqcn);
+		for (ISoilComponent component : page.getComponents()) {
+			Coordinate coordiate = component.getCoordinate();
+			ISoilComponentDrawer componentDrawer = component.getDrawer();
+			componentDrawer.display();
+		}
 	}
 
 	/**

@@ -1,6 +1,9 @@
 package com.kingofreverb.core;
 
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * determine where to go.
@@ -9,13 +12,22 @@ import javax.servlet.http.HttpServletRequest;
  */
 final class Dispatcher {
 	
-	void dispatch(HttpServletRequest req) throws SoilException{
-		String nextPage = req.getParameter("nextPage");
-		if(nextPage != null || nextPage.length() != 0){
-			
-		}else{
-			//throw Exception
-			throw new SoilException(SoilErrorCode.CANNOT_DISPATH);
+	private static final Logger log = Logger.getLogger(Dispatcher.class.getName());
+	
+	ISoilPage dispatch(String nextPageFqcn){
+		try{
+			if(nextPageFqcn != null && nextPageFqcn.length() != 0){
+				log.info("try to dispatch :" + nextPageFqcn);
+				return InstanceGenerator.getInstance(nextPageFqcn);
+			}else{
+				//throw Exception
+				log.severe("fqcn is null or empty");
+				throw new SoilException(SoilErrorCode.CANNOT_DISPATH);
+			}
+		}catch(SoilException e){
+			//nextPage should be the class_name.
+			new ExceptionHandler().handle(e,nextPageFqcn);
 		}
+		return null;
 	}
 }
