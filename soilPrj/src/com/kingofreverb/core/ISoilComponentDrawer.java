@@ -1,5 +1,6 @@
 package com.kingofreverb.core;
 
 public interface ISoilComponentDrawer {
-	String display();
+		
+	public String draw();
 }

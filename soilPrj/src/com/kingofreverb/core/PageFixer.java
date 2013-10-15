@@ -10,13 +10,17 @@ import javax.servlet.http.HttpServletRequest;
  * @author egg
  * @since  0.1
  */
-final class Dispatcher {
+final class PageFixer {
 	
-	private static final Logger log = Logger.getLogger(Dispatcher.class.getName());
+	private static final Logger log = Logger.getLogger(PageFixer.class.getName());
 	
 	ISoilPage dispatch(String nextPageFqcn){
 		try{
-			if(nextPageFqcn != null && nextPageFqcn.length() != 0){
+			if(nextPageFqcn == null){
+				//login
+				log.info("login:" + nextPageFqcn);
+				return InstanceGenerator.getInstance(LoginPage.class.getName());
+			}else if(nextPageFqcn != null && nextPageFqcn.length() != 0){
 				log.info("try to dispatch :" + nextPageFqcn);
 				return InstanceGenerator.getInstance(nextPageFqcn);
 			}else{
